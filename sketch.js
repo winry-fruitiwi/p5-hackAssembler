@@ -1,7 +1,10 @@
 /**
- * @author 
- * @date 2022.02.
+ * @author Winry
+ * @date 2022.02.23
  *
+ * Coding plan:
+ *     Note: Developed on the fly. Will not be full.
+ *     Create Parser.js
  *
  */
 let font
