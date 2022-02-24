@@ -4,7 +4,8 @@
  *
  * Coding plan:
  *     Note: Developed on the fly. Will not be full.
- *     Create Parser.js
+ *     .Create Parser.js and comp dictionaries
+ *     Add pseudocode for decToBinary
  *
  */
 let font
