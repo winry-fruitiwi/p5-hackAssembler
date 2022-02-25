@@ -55,28 +55,4 @@ class Parser {
 
 
     }
-
-    /*
-        TODO pseudocode for decToBinary!
-            I'm implementing the iterative approach.
-            Args: int num, int wordLength
-            initialize maxPowerOf2FitsInNum as 0
-            loop until 2**maxPowerOf2FitsInNum > num
-                increment maxPowerOf2FitsInNum
-            When loop terminates, decrement maxPowerOf2FitsInNum
-            Initialize empty string called word
-            while loop decrementing maxPowerOf2FitsInNum until it reaches 0
-                initialize a string called newWord = "0"
-                if 2**maxPowerOf2FitsInNum <= num:
-                    newWord = "1"
-                    num -= 2**maxPowerOf2FitsInNum
-                newWord += word
-                word = newWord
-                if num = 0, break the loop
-                maxPowerOf2FitsInNum -= 1
-            At the end of the program:
-                word = "0" + word
-                Put this in a do-while loop?
-                If word.length >= wordLength, terminate program.
-     */
 }
