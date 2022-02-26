@@ -9,7 +9,11 @@
  *     ☐ Implement decToBinary
  *
  */
-let font
+
+// this prevents all inspections for grammar typos.
+// noinspection GrazieInspection
+
+let font, parser
 
 function preload() {
     font = loadFont('data/meiryo.ttf')
@@ -17,15 +21,19 @@ function preload() {
 
 function setup() {
     createCanvas(640, 360)
-    noCanvas()
     colorMode(HSB, 360, 100, 100, 100)
 
+    parser = new Parser()
+
     // testing loop
-    for (let num = 0; num < 17; num++) {
-        // this lets me see my result
-        console.log(`${num}: ${decToBinary(num, 5)}`)
-        // decToBinary(num, 5)
-    }
+    // for (let num = 0; num < 17; num++) {
+    //     // this lets me see my result
+    //     console.log(`${num}: ${decToBinary(num, 5)}`)
+    //     // decToBinary(num, 5)
+    // }
+
+    // random number test statements
+    // console.log(decToBinary(16384, 16))
 
     // console.assert(decToBinary(0, 5) === "00000")
     // console.assert(decToBinary(1, 5) === "00001")
@@ -41,88 +49,4 @@ function setup() {
 
 function draw() {
     background(234, 34, 24)
-
-}
-
-/*
-  TODO pseudocode for decToBinary!
-      I'm implementing the iterative approach.
-      Args: int num, int wordLength
-      initialize maxPowerOf2FitsInNum as 0
-      loop until 2**maxPowerOf2FitsInNum > num
-          increment maxPowerOf2FitsInNum
-      When loop terminates, decrement maxPowerOf2FitsInNum
-      Initialize empty string called word
-      while loop decrementing maxPowerOf2FitsInNum until it reaches 0
-          initialize a string called newWord = "0"
-          if 2**maxPowerOf2FitsInNum <= num:
-              newWord = "1"
-              num -= 2**maxPowerOf2FitsInNum
-          newWord += word
-          word = newWord
-          if num = 0, break the loop
-          maxPowerOf2FitsInNum -= 1
-      At the end of the program:
-          word = "0" + word
-          Put this in a do-while loop?
-          If word.length >= wordLength, terminate program.
-*/
-function decToBinary(num, wordLength) {
-    // keeps track of the binary word
-    let word = ""
-
-    // apparently, 1 and 2 are not-working base cases...
-    if (num > 2 || num === 0) {
-        // the largest power of 2 that fits in num
-        let maxPowerOf2FitsInNum = 0
-
-        // find the largest power of 2 that fits in num
-        while (2 ** maxPowerOf2FitsInNum <= num) {
-            maxPowerOf2FitsInNum++
-        }
-        // we have to decrement maxPowerOf2FitsInNum, otherwise it won't fit!
-        maxPowerOf2FitsInNum--
-        // console.log(`${num}: ${maxPowerOf2FitsInNum}`)
-
-
-        /* Find the actual word of bits */
-        while (maxPowerOf2FitsInNum >= 0) {
-            // console.log("looping")
-            let newWord = "0"
-            if (2**maxPowerOf2FitsInNum <= num) {
-                newWord = "1"
-                num -= 2**maxPowerOf2FitsInNum
-            }
-            // this was the wrong order earlier
-            // newWord += word
-            // word = newWord
-            word += newWord
-
-            // This doesn't work because if my number is 4, I'm going to
-            // exit out of the loop and be left with just 1, not 10(0). I
-            // also just realized that the condition for my current loop
-            // needs to be >=, not > because 2**0 is still 1. It's not 0.
-            // if (num === 0) {
-            //     break
-            // }
-            maxPowerOf2FitsInNum--
-        }
-
-    } else if (num === 2) {
-        word = "10"
-    } else if (num === 1) {
-        word = "1"
-    } else {
-        return "This program can't (and doesn't need to) handle negative" +
-            " numbers yet!"
-    }
-
-
-    /* Fill in the extra spaces with zeroes */
-    while (word.length < wordLength) {
-        word = "0" + word
-    }
-
-    /* Return the new binary number! It's currently a string. */
-    return word
 }
