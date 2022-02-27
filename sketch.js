@@ -1,3 +1,5 @@
+// this prevents all inspections for grammar typos.
+// noinspection GrazieInspection
 /**
  * @author Winry
  * @date 2022.02.23
@@ -18,6 +20,9 @@
  *      begins with // → ignore
  *      trim()
  *      what to do with // in the middle of a string?
+ *          use indexOf to find index of // in string
+ *          use substring to find the code and spaces
+ *          use trim(" ") to remove the whitespace
  *
  *  paste in pseudocode in appropriate places
  *  iterate through each line from loadStrings()
@@ -38,13 +43,12 @@
  *  see 6.4 assembly process
  */
 
-// this prevents all inspections for grammar typos.
-// noinspection GrazieInspection
-
-let font, parser
+let font, parser, asmFile
+let div
 
 function preload() {
     font = loadFont('data/meiryo.ttf')
+    asmFile = loadStrings('asm/Rect.asm')
 }
 
 function setup() {
@@ -53,6 +57,36 @@ function setup() {
     colorMode(HSB, 360, 100, 100, 100)
 
     parser = new Parser()
+    div = createDiv()
+
+    // the string that holds the assembly file's code
+    let asmCode = "<pre>"
+    for (let i = 0; i < asmFile.length; i++) {
+        let instruction = asmFile[i]
+        // sometimes there are two slashes, then we need to find their
+        // index. If it's not -1, we can ignore it... for now.
+        let indexOfComment = instruction.indexOf("//")
+        // test statement
+        // console.log(`${instruction}: ${indexOfComment}`)
+        if (indexOfComment !== -1) {
+            instruction = instruction.substring(0, indexOfComment)
+        }
+
+        // if there's empty whitespace we can skip the line.
+        if (instruction === "") {
+            continue
+        }
+
+        // the first if statement is sufficient for handling comments that
+        // occupy a single line, but if we want to handle inline
+        // comments, we need to trim the extra whitespace with trim().
+        instruction = trim(instruction)
+
+        asmCode += instruction + "\n"
+    }
+    asmCode += "</pre>"
+
+    div.html(asmCode)
 
     // testing loop
     // for (let num = 0; num < 17; num++) {
