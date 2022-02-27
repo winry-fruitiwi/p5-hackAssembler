@@ -3,11 +3,39 @@
  * @date 2022.02.23
  *
  * Coding plan:
- *     Note: Developed on the fly. Will not be full.
- *     ☒ Create Parser.js and comp dictionaries
- *     ☒ Add pseudocode for decToBinary
- *     ☐ Implement decToBinary
+ *  Note: Developed on the fly. Will not be full.
+ *  ☒ Create Parser.js and comp dictionaries
+ *  ☒ Add pseudocode for decToBinary
+ *  ☐ Implement decToBinary
  *
+ *  createDiv, .html
+ *  loadStrings()
+ *  output to html either with <pre> or <br/> for new lines
+ *
+ * ➜ symbol-Less implementation
+ * cleaning asm code
+ *      empty → ignore
+ *      begins with // → ignore
+ *      trim()
+ *      what to do with // in the middle of a string?
+ *
+ *  paste in pseudocode in appropriate places
+ *  iterate through each line from loadStrings()
+ *  c or a? → console.log(`${line} → a-instruction`) or c-instruction
+ *      a-instructions
+ *          find 'rest' of line → decToBinary
+ *      c-instructions: how to detect? how to tokenize dest=comp;jump?
+ *          = → dest
+ *          ; → jump
+ *          pseudocode required before any coding happens. tracing required
+ *              tracing test cases
+ *                  🌟 all 3 parts
+ *                  figure out all valid combinations of 2
+ *                  valid combinations of 1
+ *
+ *
+ * ➜ symbol implementation: 1st and 2nd passes
+ *  see 6.4 assembly process
  */
 
 // this prevents all inspections for grammar typos.
@@ -21,6 +49,7 @@ function preload() {
 
 function setup() {
     createCanvas(640, 360)
+    noCanvas()
     colorMode(HSB, 360, 100, 100, 100)
 
     parser = new Parser()
