@@ -142,6 +142,32 @@ class Parser {
 
 
     // a function that determines whether or not the instruction passed in
-    // is an A-instruction, a C-instruction, or something else.
+    // is an A-instruction or a C-instruction. For now, I don't need to
+    // check labels because I'm using the symbol-less files.
+    // Pseudocode from earlier:
+        // if there is an equal sign, register comp and dest. If there is
+        //  		a semicolon, register jump. Else, register comp
+        // if there is an @, add a 0 to the beginning of the string and
+        //  	    find 15-digit number after the @. convert it to binary
+    // Finding the different instructions:
+        // if there is an @, call aInstruction
+        // else, call cInstruction
+    cOrAInstruction(line) {
+        if (line.indexOf("@") !== -1) {
+            this.aInstructionHandler(line)
+        } else {
+            this.cInstructionHandler(line)
+        }
+    }
 
+
+    // the function that handles a-instructions. For now it will just be
+    // console.log instance calls, but the actual translation is very simple.
+    aInstructionHandler(line) {
+        console.log(`${line} → a-instruction`)
+    }
+
+    cInstructionHandler(line) {
+        console.log(`${line} → c-instruction`)
+    }
 }

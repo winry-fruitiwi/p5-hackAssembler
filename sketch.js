@@ -48,7 +48,7 @@ let div
 
 function preload() {
     font = loadFont('data/meiryo.ttf')
-    asmFile = loadStrings('asm/Rect.asm')
+    asmFile = loadStrings('asm/Add.asm')
 }
 
 function setup() {
@@ -60,7 +60,7 @@ function setup() {
     div = createDiv()
 
     // the string that holds the assembly file's code
-    let asmCode = "<pre>"
+    let asmCodeAsHtmlInput = "<pre>"
     for (let i = 0; i < asmFile.length; i++) {
         let instruction = asmFile[i]
         // sometimes there are two slashes, then we need to find their
@@ -82,32 +82,30 @@ function setup() {
         // comments, we need to trim the extra whitespace with trim().
         instruction = trim(instruction)
 
-        asmCode += instruction + "\n"
+        asmCodeAsHtmlInput += instruction + "\n"
     }
-    asmCode += "</pre>"
+    asmCodeAsHtmlInput += "</pre>"
 
-    div.html(asmCode)
+    div.html(asmCodeAsHtmlInput)
 
-    // testing loop
-    // for (let num = 0; num < 17; num++) {
-    //     // this lets me see my result
-    //     console.log(`${num}: ${decToBinary(num, 5)}`)
-    //     // decToBinary(num, 5)
-    // }
+    // our asmCodeAsHtmlInput variable still has the <pre> tags, which we'll
+    // remove here. Then we'll be ready to split and log it! I'm using the
+    // numbers 5 and 7 because <pre> has a length of 5 and </pre> has a
+    // length of 6, plus the length of an empty string (or 1, apparently).
+    let asmCode = asmCodeAsHtmlInput.substring(5, asmCodeAsHtmlInput.length - 7)
 
-    // random number test statements
-    // console.log(decToBinary(16384, 16))
+    // we're going to feed each instruction that we've cleaned up into our
+    // parser! This is also more efficient than doing the same thing in the
+    // parser class's functions.
+    let cleanAsmFile = split(asmCode, "\n")
 
-    // console.assert(decToBinary(0, 5) === "00000")
-    // console.assert(decToBinary(1, 5) === "00001")
-    // console.assert(decToBinary(2, 5) === "00010")
-    // console.assert(decToBinary(3, 5) === "00011")
-    // console.assert(decToBinary(4, 5) === "00100")
-    // console.assert(decToBinary(5, 5) === "00101")
-    // console.assert(decToBinary(6, 5) === "00111")
-    // console.assert(decToBinary(7, 5) === "01000")
-    // console.assert(decToBinary(8, 5) === "01001")
-    // console.assert(decToBinary(9, 5) === "01010")
+    // testing statement
+    // console.log(cleanAsmFile)
+
+    // test area
+    for (let line of cleanAsmFile) {
+        parser.cOrAInstruction(line)
+    }
 }
 
 function draw() {
