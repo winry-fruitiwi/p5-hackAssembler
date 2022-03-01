@@ -8,7 +8,7 @@
  *  Note: Developed on the fly. Will not be full.
  *  ☒ Create Parser.js and comp dictionaries
  *  ☒ Add pseudocode for decToBinary
- *  ☐ Implement decToBinary
+ *  ☒ Implement decToBinary
  *
  *  createDiv, .html
  *  loadStrings()
@@ -48,7 +48,7 @@ let div
 
 function preload() {
     font = loadFont('data/meiryo.ttf')
-    asmFile = loadStrings('asm/Add.asm')
+    asmFile = loadStrings('asm/AInstructions.asm')
 }
 
 function setup() {

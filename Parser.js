@@ -154,20 +154,35 @@ class Parser {
         // else, call cInstruction
     cOrAInstruction(line) {
         if (line.indexOf("@") !== -1) {
-            this.aInstructionHandler(line)
+            this.translateA(line)
         } else {
-            this.cInstructionHandler(line)
+            this.translateC(line)
         }
     }
 
 
     // the function that handles a-instructions. For now it will just be
     // console.log instance calls, but the actual translation is very simple.
-    aInstructionHandler(line) {
-        console.log(`${line} → a-instruction`)
+    translateA(line) {
+        // we know that the numerical part of an A-instruction is after
+        // index 1, so the substring would be from 1 to length
+        let numberString = line.substring(1, line.length)
+
+        // we need to convert numberString into an int using the int() method
+        let number = int(numberString)
+
+        // now we can call decToBinary and save the result as binaryNumber!
+        let binaryNumberString = this.decToBinary(number, 15)
+
+        // now we just add a 0 to the beginning of the result and we're done!
+        let binaryLine = "0" + binaryNumberString
+
+        // the line signaling our result
+        console.log(`${line} → ${binaryLinex}`)
     }
 
-    cInstructionHandler(line) {
+    // the function that translates c-instructions. More complicated.
+    translateC(line) {
         console.log(`${line} → c-instruction`)
     }
 }
