@@ -154,9 +154,9 @@ class Parser {
         // else, call cInstruction
     cOrAInstruction(line) {
         if (line.indexOf("@") !== -1) {
-            this.translateA(line)
+            return this.translateA(line)
         } else {
-            this.translateC(line)
+            return this.translateC(line)
         }
     }
 
@@ -175,14 +175,98 @@ class Parser {
         let binaryNumberString = this.decToBinary(number, 15)
 
         // now we just add a 0 to the beginning of the result and we're done!
-        let binaryLine = "0" + binaryNumberString
-
         // the line signaling our result
-        console.log(`${line} → ${binaryLinex}`)
+        // console.log(`${line} → ${binaryLine}`)
+        return "0" + binaryNumberString
     }
 
     // the function that translates c-instructions. More complicated.
+    // Here is my new pseudocode:
+    /*
+        TODO Pseudocode for translating C-instructions
+            Note before I get into the rest of this:
+                There is no "comp" statement in programs, we can ignore it.
+            Arguments: line
+            define posOfEquals = line.indexOf("=")
+            define posOfSemicolon = line.indexOf(";")
+            define ifDest = (posOfEquals !== -1) as a flag
+            define ifJump = (posOfSemicolon !== -1) as a flag
+            result = "111"
+            if (ifDest && ifJump):
+                define dest = line.substring(0, posOfEquals)
+                result += destDict[dest]
+                define comp = line.substring(posOfEquals, posOfSemicolon)
+                result += compDict[comp]
+                define jump = line.substring(posOfSemicolon)
+                result += jumpDict[jump]
+            else if (ifDest):
+                define dest = line.substring(0, posOfEquals)
+                result += destDict[dest]
+                define comp = line.substring(posOfEquals, posOfSemicolon)
+                result += compDict[comp]
+                result += jumpDict["null"]
+            else if (ifJump):
+                result += destDict["null"]
+                define comp = line.substring(posOfEquals, posOfSemicolon)
+                result += compDict[comp]
+                define jump = line.substring(posOfSemicolon)
+                result += jumpDict[jump]
+            else:
+                console.log("Hey! This is a junk statement!")
+            at the end of the program, console.log the line and binary line.
+    */
     translateC(line) {
-        console.log(`${line} → c-instruction`)
+        // find the positions of equal signs and semicolons, then check if
+        // the respective letters exist (if they don't, the values will be -1)
+        let posOfEquals = line.indexOf("=")
+        let posOfSemicolon = line.indexOf(";")
+        let ifDest = posOfEquals !== -1
+        let ifJump = posOfSemicolon !== -1
+
+        // the result of our translation
+        let result = "111"
+        // if there's an equals and a semicolon, register comp, dest, and jump
+        if (ifDest && ifJump) {
+            // find the comp token
+            let comp = line.substring(posOfEquals, posOfSemicolon)
+            result += this.compDict[comp]
+
+            // find the dest token
+            let dest = line.substring(0, posOfEquals)
+            result += this.destDict[dest]
+
+            // find the jump token
+            let jump = line.substring(posOfSemicolon)
+            result += this.jumpDict[jump]
+
+            // console.log(`comp: ${comp}`)
+            // console.log(`dest: ${dest}`)
+            // console.log(`jump: ${jump}`)
+        } else if (ifDest) {
+            // find the comp token
+            let comp = line.substring(posOfEquals + 1) // start after equal sign
+            result += this.compDict[comp]
+
+            // find the dest token
+            let dest = line.substring(0, posOfEquals)
+            result += this.destDict[dest]
+
+            // find the jump token (doesn't exist)
+            result += this.jumpDict["null"]
+
+            // console.log(`comp: ${comp}`)
+            // console.log(`dest: ${dest}`)
+        } else if (ifJump) {
+            let comp = line.substring(0, posOfSemicolon)
+            result += this.compDict[comp]
+            result += this.destDict["null"]
+            let jump = line.substring(posOfSemicolon + 1)
+            result += this.jumpDict[jump]
+
+            // console.log(`comp: ${comp}`)
+            // console.log(`jump: ${jump}`)
+        }
+        // console.log(`${line} → ${result}`)
+        return result
     }
 }

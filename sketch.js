@@ -44,11 +44,10 @@
  */
 
 let font, parser, asmFile
-let div
 
 function preload() {
     font = loadFont('data/meiryo.ttf')
-    asmFile = loadStrings('asm/AInstructions.asm')
+    asmFile = loadStrings('asm/PongL.asm')
 }
 
 function setup() {
@@ -57,7 +56,6 @@ function setup() {
     colorMode(HSB, 360, 100, 100, 100)
 
     parser = new Parser()
-    div = createDiv()
 
     // the string that holds the assembly file's code
     let asmCodeAsHtmlInput = "<pre>"
@@ -86,7 +84,7 @@ function setup() {
     }
     asmCodeAsHtmlInput += "</pre>"
 
-    div.html(asmCodeAsHtmlInput)
+    select('#left').html(asmCodeAsHtmlInput)
 
     // our asmCodeAsHtmlInput variable still has the <pre> tags, which we'll
     // remove here. Then we'll be ready to split and log it! I'm using the
@@ -103,9 +101,13 @@ function setup() {
     // console.log(cleanAsmFile)
 
     // test area
+    let lineOutput = ""
     for (let line of cleanAsmFile) {
-        parser.cOrAInstruction(line)
+        let binaryLine = parser.cOrAInstruction(line)
+        lineOutput += `${binaryLine}\n`
     }
+
+    select("#middle").html('<pre>' + lineOutput + '</pre>')
 }
 
 function draw() {
