@@ -41,6 +41,19 @@
  *
  * ➜ symbol implementation: 1st and 2nd passes
  *  see 6.4 assembly process
+ *
+ *    create SymbolTable class (data structure is dictionary)
+ *    initialize builtin symbols (R0 → R1, screen-keyboard, others)
+ *    add symbolExists() method
+ *    go through all the instructions in file
+ *    if the syntax is (x), add to collection
+ *        Use symbol table class with a dict
+ *        Add symbol-value pairs to the dict
+ *    otherwise, continue to scan instructions until end of file
+ *    use regex to find if symbol is @x
+ *        expression should look something like "@.[^0-9]"
+ *        if expression is @x:
+ *            if x doesn't already exist, add its respective value
  */
 
 let font, parser, asmFile
@@ -100,12 +113,20 @@ function setup() {
     // testing statement
     // console.log(cleanAsmFile)
 
-    // test area
     let lineOutput = ""
     for (let line of cleanAsmFile) {
         let binaryLine = parser.cOrAInstruction(line)
         lineOutput += `${binaryLine}\n`
     }
+
+    // SymbolTable testing area
+    let symbolTable = new SymbolTable()
+    console.log(symbolTable.toString())
+    console.log(symbolTable.ifSymbolDoesntExist("variable"))
+    console.log(symbolTable.retrieveSymbol("SCREEN"))
+    symbolTable.addKeyValuePair("newVar", 100)
+    symbolTable.addKeyValuePair("newVar", 14398)
+    console.log(symbolTable.toString())
 
     select("#middle").html('<pre>' + lineOutput + '</pre>')
 }
