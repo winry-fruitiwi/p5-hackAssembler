@@ -54,6 +54,9 @@ class Parser {
             "JLE":   "110",
             "JMP":   "111",
         }
+
+        // keeps track of where each variable should be in the memory
+        this.nextVariableAddress = 16
     }
 
 
@@ -166,10 +169,30 @@ class Parser {
     translateA(line) {
         // we know that the numerical part of an A-instruction is after
         // index 1, so the substring would be from 1 to length
-        let numberString = line.substring(1, line.length)
+        let numberOrVariableString = line.substring(1, line.length)
+
+        // this regular expression checks for any non-number symbol. Let's
+        // see how this goes.
+        let nonASCIISymbol = new RegExp("[^0-9].")
+        if (nonASCIISymbol.test(numberOrVariableString)) {
+            // this "numerical" part might be a variable, so we have to use a
+            // symbol table to handle this.
+            console.log(numberOrVariableString)
+            if (symbolTable.ifSymbolDoesntExist(numberOrVariableString)) {
+                symbolTable.addKeyValuePair(
+                    numberOrVariableString,
+                    this.nextVariableAddress
+                )
+                console.log("New symbol added!")
+
+                // increment the next variable's address
+                this.nextVariableAddress++
+            }
+            numberOrVariableString = symbolTable.retrieveSymbol(numberOrVariableString)
+        }
 
         // we need to convert numberString into an int using the int() method
-        let number = int(numberString)
+        let number = int(numberOrVariableString)
 
         // now we can call decToBinary and save the result as binaryNumber!
         let binaryNumberString = this.decToBinary(number, 15)
@@ -185,7 +208,7 @@ class Parser {
     /*
         TODO Pseudocode for translating C-instructions
             Note before I get into the rest of this:
-                There is no "comp" statement in programs, we can ignore it.
+                There is no "comp" statement in programs, so we can ignore it.
             Arguments: line
             define posOfEquals = line.indexOf("=")
             define posOfSemicolon = line.indexOf(";")

@@ -56,11 +56,11 @@
  *            if x doesn't already exist, add its respective value
  */
 
-let font, parser, asmFile
+let font, parser, symbolTable, lineCount, asmFile
 
 function preload() {
     font = loadFont('data/meiryo.ttf')
-    asmFile = loadStrings('asm/PongL.asm')
+    asmFile = loadStrings('asm/AInstructions.asm')
 }
 
 function setup() {
@@ -69,11 +69,24 @@ function setup() {
     colorMode(HSB, 360, 100, 100, 100)
 
     parser = new Parser()
+    symbolTable = new SymbolTable()
+    // we need to count the number of lines we've gone through, or else we
+    // won't be able to translate labels.
+    lineCount = 0
 
     // the string that holds the assembly file's code
     let asmCodeAsHtmlInput = "<pre>"
     for (let i = 0; i < asmFile.length; i++) {
         let instruction = asmFile[i]
+
+        // sometimes there will be labels with syntax: (label)
+        // we need to account for this when we're cleaning the file.
+        if (instruction[0] === "(") {
+            let symbol = instruction.substring(1, instruction.length-1)
+            symbolTable.addKeyValuePair(symbol, lineCount)
+            continue
+        }
+
         // sometimes there are two slashes, then we need to find their
         // index. If it's not -1, we can ignore it... for now.
         let indexOfComment = instruction.indexOf("//")
@@ -94,6 +107,7 @@ function setup() {
         instruction = trim(instruction)
 
         asmCodeAsHtmlInput += instruction + "\n"
+        lineCount += 1
     }
     asmCodeAsHtmlInput += "</pre>"
 
@@ -120,12 +134,6 @@ function setup() {
     }
 
     // SymbolTable testing area
-    let symbolTable = new SymbolTable()
-    console.log(symbolTable.toString())
-    console.log(symbolTable.ifSymbolDoesntExist("variable"))
-    console.log(symbolTable.retrieveSymbol("SCREEN"))
-    symbolTable.addKeyValuePair("newVar", 100)
-    symbolTable.addKeyValuePair("newVar", 14398)
     console.log(symbolTable.toString())
 
     select("#middle").html('<pre>' + lineOutput + '</pre>')
